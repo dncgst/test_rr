@@ -1,0 +1,73 @@
+---
+title: "Open Science. Basic principles and best practices"
+author: "D.Giusti"
+date: "05/05/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import the Acheulean data from the archdata package 
+
+```{r}
+2+2
+```
+
+
+```{r include=FALSE}
+# load the Acheulean dataset
+install.packages("archdata") # install the package
+library(archdata) # load the package
+data(package="archdata") # show the data sets in package ‘archdata’
+data("Acheulean") # load the Acheulean data set
+?Acheulean
+```
+
+## Read data from Dropbox
+
+```{r include=FALSE}
+# create a /data directory
+getwd() # get working directory
+list.files() # list files in the wd
+dir.create("data") # create a /data directory
+
+# download the data from Dropbox
+getwd()
+url <- "https://www.dropbox.com/s/zpf2062jrdbhj2s/Acheulean.csv?raw=1" # specify URL where file is stored. NOTE: add a raw=1 URL parameter or you will get a HTML preview page, not the file content itself
+# destfile <- "/home/dncgst/nextCloud/Teaching/Open science/test_rr/data/Acheulean.csv" # specify destination where file should be saved
+destfile <- "data/Acheulean.csv"
+download.file(url, destfile) # download the CSV file
+
+# read the CSV file
+Acheulean <- read.csv(file = "data/Acheulean.csv", header = TRUE, sep = ",", dec = ".", row.names = 1)
+# There are functions to read as well Excel files.
+```
+
+## The Acheulean dataset
+
+```{r}
+# first look at the dataframe
+View(Acheulean)
+str(Acheulean) # data object stucture
+summary(Acheulean) # summary
+```
+
+## Examples
+
+```{r}
+data(Acheulean)
+
+# Compute percentages for each assemblage
+?prop.table
+prop.table(as.matrix(Acheulean[,3:14]), 1)
+prop.table(as.matrix(Acheulean[,3:14]), 1)*100
+
+Acheulean.pct <- prop.table(as.matrix(Acheulean[,3:14]), 1)*100 # 
+round(Acheulean.pct, 2) # round to 2 decimals
+plot(OST~HA, Acheulean.pct) # Number of other small tools ~ Number of handaxes
+boxplot(Acheulean.pct)
+```
